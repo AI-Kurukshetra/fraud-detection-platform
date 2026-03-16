@@ -9,6 +9,29 @@ import { scoreTransaction } from "@/lib/scoring/engine";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 import { transactionSchema } from "@/lib/validation/schemas";
 
+export async function GET(request: Request) {
+  const supabase = createServiceRoleClient();
+  if (!supabase) return fail("Service unavailable.", 503);
+
+  const { searchParams } = new URL(request.url);
+  const limit = Math.min(parseInt(searchParams.get("limit") ?? "100", 10), 500);
+  const status = searchParams.get("status");
+  const risk = searchParams.get("risk");
+
+  let query = supabase
+    .from("transactions")
+    .select("*, merchants(name)")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (status) query = query.eq("status", status);
+  if (risk) query = query.eq("risk_level", risk);
+
+  const { data, error } = await query;
+  if (error) return fail(error.message, 500);
+  return ok(data);
+}
+
 export async function POST(request: Request) {
   const merchant = await authenticateMerchant();
   if (!merchant) {
@@ -54,7 +77,6 @@ export async function POST(request: Request) {
       ip_address: parsed.data.ipAddress,
       device_id: parsed.data.deviceId ?? null,
       user_account_id: parsed.data.userAccountId,
-      channel: parsed.data.channel ?? "web",
       risk_score: result.overallScore,
       risk_level: result.riskLevel,
       status: result.decision,

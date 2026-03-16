@@ -71,7 +71,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         <CardDescription>
           {hasSupabaseEnv()
             ? "Use Supabase Auth to access the fraud operations dashboard."
-            : "Supabase env is not configured, so this runs in demo mode and opens the dashboard directly."}
+            : "."}
         </CardDescription>
       </CardHeader>
       <CardContent>

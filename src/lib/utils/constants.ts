@@ -3,12 +3,14 @@ import type { NavItem, RiskLevel } from "@/lib/types/api";
 export const DASHBOARD_NAV: NavItem[] = [
   { href: "/dashboard", label: "Overview" },
   { href: "/dashboard/transactions", label: "Transactions" },
+  { href: "/dashboard/merchants", label: "Merchants" },
+  { href: "/dashboard/customers", label: "Customers" },
   { href: "/dashboard/devices", label: "Devices" },
   { href: "/dashboard/cases", label: "Cases" },
   { href: "/dashboard/rules", label: "Rules" },
   { href: "/dashboard/alerts", label: "Alerts" },
   { href: "/dashboard/reports", label: "Reports" },
-  { href: "/dashboard/settings", label: "Settings" },
+  { href: "/dashboard/settings", label: "Settings" }, // Whitelist/Blacklist
 ];
 
 export const RISK_LEVEL_COLORS: Record<RiskLevel, string> = {

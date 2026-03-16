@@ -28,7 +28,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <Link href="/dashboard">
+              <Link href="/register">
                 Open dashboard
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>

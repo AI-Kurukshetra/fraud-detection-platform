@@ -1,16 +1,38 @@
-import { demoMerchants, demoTransactions } from "@/lib/demo/data";
+"use client";
+
+import { useEffect, useState } from "react";
 
 import { TransactionsTable } from "@/components/dashboard/data-table";
 
+interface TxnRow {
+  external_transaction_id: string;
+  amount: number;
+  currency: string;
+  risk_level: string;
+  status: string;
+  created_at: string;
+  merchants: { name: string } | null;
+}
+
 export default function TransactionsPage() {
-  const rows = demoTransactions.map((transaction) => ({
-    id: transaction.external_transaction_id,
-    merchant: demoMerchants.find((merchant) => merchant.id === transaction.merchant_id)?.name ?? "Unknown",
-    amount: transaction.amount,
-    currency: transaction.currency,
-    riskLevel: transaction.risk_level,
-    status: transaction.status,
-    createdAt: transaction.created_at,
+  const [rows, setRows] = useState<TxnRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/transactions?limit=200")
+      .then((r) => r.json())
+      .then((j) => { if (j.success) setRows(j.data ?? []); })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const tableRows = rows.map((t) => ({
+    id: t.external_transaction_id,
+    merchant: t.merchants?.name ?? "Unknown",
+    amount: t.amount,
+    currency: t.currency,
+    riskLevel: t.risk_level as "low" | "medium" | "high" | "critical",
+    status: t.status as "approved" | "declined" | "review",
+    createdAt: t.created_at,
   }));
 
   return (
@@ -21,7 +43,11 @@ export default function TransactionsPage() {
           Search, review, and inspect transaction scoring outcomes across merchants.
         </p>
       </div>
-      <TransactionsTable title="Transaction queue" rows={rows} />
+      {loading ? (
+        <p className="text-sm text-slate-400">Loading transactions...</p>
+      ) : (
+        <TransactionsTable title="Transaction queue" rows={tableRows} />
+      )}
     </div>
   );
 }

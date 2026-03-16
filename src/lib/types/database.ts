@@ -88,3 +88,16 @@ export interface FraudCase {
   created_at: string;
   updated_at: string;
 }
+
+export type EntityType = "ip" | "device" | "user" | "card_bin" | "email" | "email_domain";
+export type ListType = "whitelist" | "blacklist";
+
+export interface EntityList {
+  id: string;
+  entity_type: EntityType;
+  entity_value: string;
+  list_type: ListType;
+  reason: string | null;
+  expires_at: string | null;
+  created_at: string;
+}

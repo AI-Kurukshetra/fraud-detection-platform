@@ -9,9 +9,11 @@ import {
   FileText,
   LayoutDashboard,
   ShieldAlert,
+  ShieldCheck,
   SlidersHorizontal,
   Smartphone,
-  UsersRound,
+  Store,
+  Users,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -21,12 +23,14 @@ import { DASHBOARD_NAV } from "@/lib/utils/constants";
 const iconMap = {
   Overview: LayoutDashboard,
   Transactions: CreditCard,
+  Merchants: Store,
+  Customers: Users,
   Devices: Smartphone,
   Cases: ShieldAlert,
   Rules: SlidersHorizontal,
   Alerts: AlertTriangle,
   Reports: BarChart3,
-  Settings: UsersRound,
+  Settings: ShieldCheck,
 };
 
 export function DashboardSidebar() {

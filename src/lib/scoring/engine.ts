@@ -30,15 +30,15 @@ async function scoreWithAi(input: TransactionInput, hints: string[]) {
   }
 
   try {
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: [
+        model: "gpt-4o-mini",
+        messages: [
           {
             role: "system",
             content:
@@ -49,24 +49,7 @@ async function scoreWithAi(input: TransactionInput, hints: string[]) {
             content: JSON.stringify({ transaction: input, hints }),
           },
         ],
-        text: {
-          format: {
-            type: "json_schema",
-            name: "fraud_score",
-            schema: {
-              type: "object",
-              properties: {
-                score: { type: "number" },
-                reasons: {
-                  type: "array",
-                  items: { type: "string" },
-                },
-              },
-              required: ["score", "reasons"],
-              additionalProperties: false,
-            },
-          },
-        },
+        response_format: { type: "json_object" },
       }),
     });
 
@@ -75,9 +58,9 @@ async function scoreWithAi(input: TransactionInput, hints: string[]) {
     }
 
     const payload = (await response.json()) as {
-      output_text?: string;
+      choices?: Array<{ message: { content: string } }>;
     };
-    const parsed = JSON.parse(payload.output_text ?? "{}") as { score?: number; reasons?: string[] };
+    const parsed = JSON.parse(payload.choices?.[0]?.message?.content ?? "{}") as { score?: number; reasons?: string[] };
 
     return {
       score: clampScore(parsed.score ?? heuristicModel(input, hints)),
