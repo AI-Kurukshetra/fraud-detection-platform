@@ -6,7 +6,7 @@ export const transactionSchema = z.object({
   amount: z.number().positive(),
   currency: z.string().length(3),
   paymentMethodType: z.enum(["card", "bank", "wallet"]),
-  channel: z.enum(["web", "mobile", "api", "pos"]).optional().nullable(),
+  channel: z.enum(["web", "mobile", "api", "pos"]).optional().nullable().transform((v) => v ?? undefined),
   billingCountry: z.string().length(2).optional().nullable(),
   shippingCountry: z.string().length(2).optional().nullable(),
   ipAddress: z.string().min(7),

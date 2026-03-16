@@ -266,7 +266,7 @@ export default function MerchantsPage() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-slate-950">{merchant.name}</span>
-                          <Badge variant={merchant.status === "active" ? "success" : "secondary"}>
+                          <Badge variant={merchant.status === "active" ? "success" : "default"}>
                             {merchant.status}
                           </Badge>
                         </div>
